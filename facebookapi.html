@@ -37,18 +37,23 @@
     <script>
       // Function to handle login
       function loginWithFacebook() {
-        FB.login(function(response) {
-          if (response.authResponse) {
-            console.log('Logged in successfully');
-            // Now you can access the user's data
-            FB.api('/me', function(user) {
-              console.log('User data:', user);
-              document.getElementById('status').innerHTML = `Hello, ${user.name}!`;
-            });
-          } else {
-            console.log('User cancelled login or did not fully authorize.');
-          }
-        }, { scope: 'email' }); // Request email permission if needed
+        // Check if Facebook is initialized
+        if (typeof FB !== 'undefined' && FB) {
+          FB.login(function(response) {
+            if (response.authResponse) {
+              console.log('Logged in successfully');
+              // Now you can access the user's data
+              FB.api('/me', function(user) {
+                console.log('User data:', user);
+                document.getElementById('status').innerHTML = `Hello, ${user.name}!`;
+              });
+            } else {
+              console.log('User cancelled login or did not fully authorize.');
+            }
+          }, { scope: 'email' }); // Request email permission if needed
+        } else {
+          console.error('Facebook SDK is not initialized yet.');
+        }
       }
     </script>
 
