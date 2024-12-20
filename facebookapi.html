@@ -3,21 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook Login</title>
+    <title>Facebook Login Example</title>
     <script>
       // Initialize the Facebook SDK
       window.fbAsyncInit = function() {
         FB.init({
-          appId      : '468825406321179', // Replace with your Facebook App ID
+          appId      : '468825406321179', // Replace with your App ID from Facebook Developer Console
           cookie     : true,  // Enable cookies to allow the server to access the session
           xfbml      : true,  // Parse social plugins on this page
           version    : 'v12.0' // Use the latest version of the Graph API
         });
 
         FB.AppEvents.logPageView(); // Log page view for analytics
-
-        // Now that FB.init() is complete, we can call FB.login
-        document.getElementById("login-btn").disabled = false;
       };
 
       // Asynchronously load the SDK
@@ -32,8 +29,8 @@
 </head>
 <body>
 
-    <h2>Login with Facebook</h2>
-    <button id="login-btn" onclick="loginWithFacebook()" disabled>Login with Facebook</button>
+    <h2>Facebook Login Example</h2>
+    <button onclick="loginWithFacebook()">Login with Facebook</button>
 
     <div id="status"></div>
 
@@ -44,14 +41,34 @@
           if (response.authResponse) {
             console.log('Logged in successfully');
             // Now you can access the user's data
-            FB.api('/me', function(user) {
-              console.log('User data:', user);
-              document.getElementById('status').innerHTML = `Hello, ${user.name}!`;
+            FB.api('/me?fields=id,name,email,first_name,last_name,gender,birthday,location,hometown,picture,friends,photos,posts,education,work', function(response) {
+              console.log('User Data:', response);
+              document.getElementById('status').innerHTML = `
+                <h3>Welcome, ${response.name}</h3>
+                <p>Email: ${response.email}</p>
+                <p>Birthday: ${response.birthday}</p>
+                <p>Location: ${response.location ? response.location.name : 'Not provided'}</p>
+                <p>Hometown: ${response.hometown ? response.hometown.name : 'Not provided'}</p>
+                <p>Gender: ${response.gender}</p>
+                <p><img src="${response.picture.data.url}" alt="Profile Picture"></p>
+                <h4>Friends:</h4>
+                <ul>
+                  ${response.friends.data.map(friend => `<li>${friend.name}</li>`).join('')}
+                </ul>
+                <h4>Posts:</h4>
+                <ul>
+                  ${response.posts.data.map(post => `<li>${post.message}</li>`).join('')}
+                </ul>
+                <h4>Photos:</h4>
+                <ul>
+                  ${response.photos.data.map(photo => `<li><img src="${photo.picture}" alt="Photo" style="width:100px;"></li>`).join('')}
+                </ul>
+              `;
             });
           } else {
             console.log('User cancelled login or did not fully authorize.');
           }
-        }, { scope: 'email' }); // Request email permission
+        }, { scope: 'email,public_profile,user_birthday,user_friends,user_location,user_hometown,user_photos,user_posts,user_education_history,user_work_history' });
       }
     </script>
 
