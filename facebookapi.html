@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook Login</title>
+    <script>
+      // Initialize the Facebook SDK
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : 'YOUR_APP_ID', // Replace with your App ID from Facebook Developer Console
+          cookie     : true,  // Enable cookies to allow the server to access the session
+          xfbml      : true,  // Parse social plugins on this page
+          version    : 'v12.0' // Use the latest version of the Graph API
+        });
+
+        FB.AppEvents.logPageView(); // Log page view for analytics
+      };
+
+      // Asynchronously load the SDK
+      (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    </script>
+</head>
+<body>
+
+    <h2>Facebook Login Example</h2>
+    <button onclick="loginWithFacebook()">Login with Facebook</button>
+
+    <div id="status"></div>
+
+    <script>
+      // Function to handle login
+      function loginWithFacebook() {
+        FB.login(function(response) {
+          if (response.authResponse) {
+            console.log('Logged in successfully');
+            // Now you can access the user's data
+            FB.api('/me', function(user) {
+              console.log('User data:', user);
+              document.getElementById('status').innerHTML = `Hello, ${user.name}!`;
+            });
+          } else {
+            console.log('User cancelled login or did not fully authorize.');
+          }
+        }, { scope: 'email' }); // Request email permission if needed
+      }
+    </script>
+
+</body>
+</html>
