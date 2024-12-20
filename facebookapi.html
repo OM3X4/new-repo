@@ -5,19 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Facebook Login</title>
     <script>
-      // Initialize the Facebook SDK
       window.fbAsyncInit = function() {
         FB.init({
-          appId      : '552438964293361', // Replace with your App ID from Facebook Developer Console
-          cookie     : true,  // Enable cookies to allow the server to access the session
-          xfbml      : true,  // Parse social plugins on this page
-          version    : 'v12.0' // Use the latest version of the Graph API
+          appId      : '552438964293361', // Replace with your actual App ID
+          cookie     : true,
+          xfbml      : true,
+          version    : 'v12.0' // Facebook Graph API version
         });
 
-        FB.AppEvents.logPageView(); // Log page view for analytics
+        FB.AppEvents.logPageView(); // Optional analytics
       };
 
-      // Asynchronously load the SDK
       (function(d, s, id){
         var js, fjs = d.getElementsByTagName(s)[0];
         if (d.getElementById(id)) return;
@@ -29,42 +27,24 @@
 </head>
 <body>
 
-    <h2>Facebook Login Example</h2>
+    <h2>Login with Facebook</h2>
     <button onclick="loginWithFacebook()">Login with Facebook</button>
 
     <div id="status"></div>
 
     <script>
-      // Function to handle login
       function loginWithFacebook() {
-        // Ensure the FB SDK is initialized
-        if (typeof FB !== 'undefined' && FB) {
-          FB.getLoginStatus(function(response) {
-            if (response.status === 'connected') {
-              // User is already logged in
-              console.log('User is already logged in');
-              FB.api('/me', function(user) {
-                console.log('User data:', user);
-                document.getElementById('status').innerHTML = `Hello, ${user.name}!`;
-              });
-            } else {
-              // User is not logged in, proceed with login
-              FB.login(function(response) {
-                if (response.authResponse) {
-                  console.log('Logged in successfully');
-                  FB.api('/me', function(user) {
-                    console.log('User data:', user);
-                    document.getElementById('status').innerHTML = `Hello, ${user.name}!`;
-                  });
-                } else {
-                  console.log('User cancelled login or did not fully authorize.');
-                }
-              }, { scope: 'email' }); // Request email permission if needed
-            }
-          });
-        } else {
-          console.error('Facebook SDK is not initialized yet.');
-        }
+        FB.login(function(response) {
+          if (response.authResponse) {
+            console.log('Logged in successfully');
+            FB.api('/me', function(user) {
+              console.log('User data:', user);
+              document.getElementById('status').innerHTML = `Hello, ${user.name}!`;
+            });
+          } else {
+            console.log('User cancelled login or did not fully authorize.');
+          }
+        }, { scope: 'email' }); // Request email permission
       }
     </script>
 
