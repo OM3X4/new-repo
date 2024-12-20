@@ -1,2 +1,2 @@
-app secret : 4b421578ea0c90181f0d3b087a179f5a
-app id : 552438964293361
+app secret : ec3b7776043bbb16fea631a2e2cb72dd
+app id : 468825406321179
